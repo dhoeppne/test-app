@@ -1,9 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
+import {fetch} from "whatwg-fetch";
 
 export const counterSlice = createSlice({
   name: 'counter',
   initialState: {
     value: 0,
+    ipAddress: "",
   },
   reducers: {
     increment: state => {
@@ -19,10 +21,13 @@ export const counterSlice = createSlice({
     incrementByAmount: (state, action) => {
       state.value += action.payload;
     },
+    updateIpAddress: (state, action) => {
+      state.ipAddress = action.payload;
+    },
   },
 });
 
-export const { increment, decrement, incrementByAmount } = counterSlice.actions;
+export const { increment, decrement, incrementByAmount, updateIpAddress } = counterSlice.actions;
 
 // The function below is called a thunk and allows us to perform async logic. It
 // can be dispatched like a regular action: `dispatch(incrementAsync(10))`. This
@@ -34,9 +39,15 @@ export const incrementAsync = amount => dispatch => {
   }, 1000);
 };
 
+export const asyncRequest = amount => async dispatch => {
+  const jsonRes = await (await fetch("http://ip.jsontest.com/")).json();
+  return dispatch(updateIpAddress(jsonRes.ip));
+};
+
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of
 // in the slice file. For example: `useSelector((state) => state.counter.value)`
 export const selectCount = state => state.counter.value;
+export const selectIp = state => state.counter.ipAddress;
 
 export default counterSlice.reducer;

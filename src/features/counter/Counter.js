@@ -6,16 +6,26 @@ import {
   incrementByAmount,
   incrementAsync,
   selectCount,
+  asyncRequest,
+  selectIp
 } from './counterSlice';
 import styles from './Counter.module.css';
 
 export const Counter = () => {
   const count = useSelector(selectCount);
+  const ipAddress = useSelector(selectIp);
   const dispatch = useDispatch();
   const [incrementAmount, setIncrementAmount] = useState('2');
 
   return (
     <div>
+      <button
+          className={styles.button}
+          aria-label="Do async request"
+          onClick={() => dispatch(asyncRequest())}
+        >
+          Get IP Address: {ipAddress}
+      </button>
       <div className={styles.row}>
         <button
           className={styles.button}
